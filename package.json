@@ -1,0 +1,53 @@
+{
+  "name": "webhole",
+  "version": "0.5.5",
+  "private": true,
+  "dependencies": {
+    "@emotion/react": "^11.5.0",
+    "@emotion/styled": "^11.3.0",
+    "@material-ui/core": "^5.0.0-beta.5",
+    "@mui/icons-material": "^5.0.4",
+    "@mui/material": "^5.0.4",
+    "antd": "^4.16.13",
+    "copy-to-clipboard": "^3.3.1",
+    "fix-orientation": "^1.1.0",
+    "load-script": "^1.0.0",
+    "p-limit": "^3.1.0",
+    "pressure": "^2.2.0",
+    "react": "^16.14.0",
+    "react-dom": "^16.14.0",
+    "react-lazyload": "^3.2.0",
+    "react-native": "^0.66.0",
+    "react-native-image-zoom-viewer": "^3.0.1",
+    "react-native-web": "^0.17.5",
+    "react-scripts": "^4.0.3",
+    "react-timeago": "^4.4.0"
+  },
+  "scripts": {
+    "start": "react-scripts start",
+    "build": "react-scripts build",
+    "test": "react-scripts test --env=jsdom",
+    "eject": "react-scripts eject",
+    "lint": "eslint --fix --ext .js src"
+  },
+  "homepage": ".",
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
+  },
+  "devDependencies": {
+    "eslint": "^7.30.0",
+    "eslint-config-prettier": "^8.3.0",
+    "eslint-plugin-prettier": "^3.4.0",
+    "eslint-plugin-react": "^7.24.0",
+    "prettier": "^2.3.2"
+  }
+}

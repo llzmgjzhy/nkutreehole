@@ -1,0 +1,92 @@
+.login-form p {
+  margin: 1em 0;
+  text-align: center;
+}
+.login-form button {
+  width: 6rem;
+}
+.chooseimg {
+  display: none;
+}
+
+.reply-form {
+  display: flex;
+}
+.reply-sticky {
+  position: sticky;
+  bottom: 0;
+}
+.reply-form TextField {
+  resize: vertical;
+  flex: 1;
+  min-height: 2em;
+  height: 4em;
+}
+.reply-form button {
+  flex: 0 0 3em;
+  margin-right: 0;
+}
+.sendbtn {
+  flex: 0 0 16em;
+  /* flex: 1; */
+  margin-left: 0; 
+  /* float: right;
+  /* left: 100; */
+}
+.post-form-bar {
+  line-height: 2em;
+  display: flex;
+  margin-bottom: 0.5em;
+}
+.post-form-bar label {
+  flex: 1;
+}
+.post-form-bar input[type='file'] {
+  border: 0;
+  padding: 0 0 0 0.5em;
+}
+@media screen and (max-width: 580px) {
+  .post-form-bar input[type='file'] {
+    width: 120px;
+  }
+}
+.post-form-bar button {
+  flex: 0 0 8em;
+  /* flex: 1; */
+  margin-right: 0;
+}
+.post-form-box {
+  display: flex;
+}
+.post-form-img-tip {
+  font-size: small;
+  margin-top: -0.5em;
+  margin-bottom: 0.5em;
+}
+.post-form TextField {
+  resize: vertical;
+  flex: 0 0 1em;
+  min-height: 4em;
+  height: 8em;
+}
+
+.life-info-table {
+  width: 100%;
+  margin: auto;
+}
+@media screen and (min-width: 375px) {
+  .life-info-table {
+    width: 315px;
+  }
+}
+.life-info-table td {
+  padding: 0.25em;
+}
+.life-info-table td:nth-child(1) {
+  font-weight: bold;
+  text-align: right;
+}
+
+.life-info-error a {
+  --var-link-color: hsl(25, 100%, 45%);
+}
