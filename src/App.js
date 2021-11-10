@@ -8,7 +8,7 @@ import { load_config, bgimg_style } from './Config';
 import { listen_darkmode } from './infrastructure/functions';
 import { LoginPopup, TitleLine } from './infrastructure/widgets';
 import { cache } from './cache';
-
+import { API_BASE, socket } from './Common';
 const MAX_SIDEBAR_STACK_SIZE = 10;
 
 function DeprecatedAlert(props) {
@@ -49,9 +49,43 @@ class App extends Component {
     });
   }
   componentDidMount() {
+    if (!!this.state.token) {
+      socket.emit('Login', this.state.token);
+      socket.on('Login_success', function (msg) {
+        console.log(msg);
+      });
+    }
     setInterval(() => {
       this.change_imgShow();
     }, 1000);
+    //轮询获取自己树洞的回复数量，如果是最新则提示用户
+    // setInterval(() => {
+    //   if (this.state.token) {
+    //     fetch(
+    //       API_BASE + 'check_latest_comment.php?user_token=' + this.state.token,
+    //     )
+    //       .then(function (res) {
+    //         // localStorage['tempLatest'] = JSON.stringify(res);
+    //         return res.text().then((t) => {
+    //           try {
+    //             return JSON.parse(t);
+    //           } catch (e) {
+    //             console.error('json parse error');
+    //             console.trace(e);
+    //             console.log(t);
+    //             throw new SyntaxError('JSON Parse Error ' + t.substr(0, 50));
+    //           }
+    //         });
+    //       })
+    //       .then(function (msg) {
+    //         if (localStorage['tempLatest'] != JSON.stringify(msg)) {
+    //           localStorage['comment_Tips'] = '1';
+    //         }
+    //         localStorage['tempLatest'] = JSON.stringify(msg);
+
+    //       });
+    //   }
+    // }, 1000);
     cache(); // init indexeddb
     window.addEventListener(
       'popstate',

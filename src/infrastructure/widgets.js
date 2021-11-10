@@ -19,6 +19,7 @@ import appicon_hole from './appicon/coverchange.png';
 // import appicon_homepage from './appicon/homepage.png';
 import { NKUHELPER_ROOT } from './const';
 import { get_json, API_VERSION_PARAM } from './functions';
+import { socket } from '../Common';
 
 const LOGIN_POPUP_ANCHOR_ID = 'pkuhelper_login_popup_anchor';
 
@@ -352,6 +353,10 @@ class LoginPopupSelf extends Component {
             }
 
             set_token(json.user_token);
+            socket.emit('Login', json.user_token);
+            socket.on('Login_success', function (msg) {
+              console.log(msg);
+            });
             alert(`成功登录`);
             this.setState({
               loading_status: 'done',
@@ -489,7 +494,14 @@ class LoginPopupSelf extends Component {
           <p>
             <input ref={this.input_token_ref} placeholder="User Token" />
             <br />
-            <br />
+            <hr />
+            <a
+              target="_blank"
+              href="http://mp.weixin.qq.com/s?__biz=Mzg3NTY5NDA0MQ==&mid=2247483678&idx=1&sn=d8ecc86c440363e56505cd51d55ceb74&chksm=cf3cd3a8f84b5abed76b5d9c171e3340ddf30bdcc321f6e7057a24ab529c254b0f66cdadad86#rd"
+            >
+              <small>没有/忘记Token？</small>
+            </a>
+            <hr />
             {/* <button type="button" disabled={this.state.loading_status==='loading'}
                                 onClick={(e)=>this.do_input_token(this.props.token_callback)}>
                             登陆

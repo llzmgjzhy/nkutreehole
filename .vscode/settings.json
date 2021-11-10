@@ -7,13 +7,16 @@
         "hardwareback",
         "imageshow",
         "imagesmall",
+        "img",
         "imgsrc",
         "likenum",
         "NKUHELPER",
         "postsidebar",
         "previewimage",
         "showmine",
+        "socket",
         "src",
+        "temptext",
         "userback"
     ]
 }

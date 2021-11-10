@@ -116,7 +116,7 @@ var encodeUrl = encodeURIComponent(linkUrl);
 //   })
 //   .catch(console.log('设置失败'));
 fetch(
-  'http://spring-autumn.net//Tree_Hole_Login/autoreply.php' +
+  'http://spring-autumn.net//Tree_Hole_Login/wxconfig.php' +
     '?url=' +
     encodeUrl,
 )

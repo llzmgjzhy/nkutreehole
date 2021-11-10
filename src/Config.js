@@ -474,19 +474,19 @@ export class ConfigUI extends PureComponent {
             description="启用后，可以将关注列表按最后回复时间排序。不建议在性能较差的设备上启用"
           />
         </div> */}
-        <div className="box">
+        {/* <div className="box">
           <p>
             新功能建议或问题反馈请联系qq：&nbsp;
             <a onClick={this.copy_qq.bind(this, 1176036298)}>1176036298</a>
-            {/* <a
+            <a
               href="https://github.com/AllanChain/PKUHoleCommunity/issues"
               target="_blank"
             >
               GitHub <span className="icon icon-github" />
             </a>
-            &nbsp;提出。 */}
+            &nbsp;提出。
           </p>
-        </div>
+        </div> */}
       </div>
     );
   }

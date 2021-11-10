@@ -2,7 +2,6 @@ import { get_json, API_VERSION_PARAM } from './infrastructure/functions';
 import { NKUHELPER_ROOT } from './infrastructure/const';
 import { API_BASE } from './Common';
 import { cache } from './cache';
-
 export { NKUHELPER_ROOT, API_VERSION_PARAM };
 
 export function token_param(token) {
@@ -36,9 +35,15 @@ const parse_replies = (replies, color_picker) =>
 export const API = {
   load_replies: async (pid, token, color_picker, cache_version) => {
     pid = parseInt(pid);
+    var search_token = token ? token : '';
     const response = await fetch(
       // '//39.105.113.112/Tree_Hole/api.php?action=get_comment' + '&pid=' + pid,
-      API_BASE + 'api.php?action=get_comment' + '&pid=' + pid,
+      API_BASE +
+        'api.php?action=get_comment' +
+        '&pid=' +
+        pid +
+        '&user_token=' +
+        search_token,
     );
     const json = await handle_response(response);
     // Helper warnings are not cacheable
@@ -101,7 +106,6 @@ export const API = {
 
   get_list: async (page, token) => {
     const response = await fetch(
-      // '//39.105.113.112/Tree_Hole/api.php?action=get_list' + '&p=' + page,
       API_BASE + 'api.php?action=get_list' + '&p=' + page,
     );
     return handle_response(response);
@@ -138,6 +142,12 @@ export const API = {
   get_mine: async (token) => {
     const response = await fetch(
       API_BASE + '/api.php?action=get_mine' + token_param(token),
+    );
+    return handle_response(response);
+  },
+  get_mine_latest: async (token) => {
+    const response = await fetch(
+      API_BASE + 'check_latest_comment.php?user_token=' + token,
     );
     return handle_response(response);
   },

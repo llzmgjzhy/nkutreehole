@@ -24,6 +24,7 @@ import AutorenewIcon from '@mui/icons-material/Autorenew';
 import MobiledataOffIcon from '@mui/icons-material/MobiledataOff';
 import StarsIcon from '@mui/icons-material/Stars';
 import Button from '@mui/material/Button';
+import WarningIcon from '@mui/icons-material/Warning';
 import { AudioWidget } from './AudioWidget';
 import { TokenCtx, ReplyForm } from './UserAction';
 
@@ -427,6 +428,7 @@ class FlowSidebar extends PureComponent {
             info: update_count
               ? Object.assign({}, prev.info, {
                   reply: '' + json.data.length,
+                  likenum: '' + json.likenum,
                 })
               : prev.info,
             attention: !!json.attention,
@@ -473,6 +475,7 @@ class FlowSidebar extends PureComponent {
         this.syncState({
           attention: next_attention,
         });
+        this.load_replies();
       })
       .catch((e) => {
         this.setState({
@@ -488,15 +491,17 @@ class FlowSidebar extends PureComponent {
     if (reason !== null) {
       API.report(this.state.info.pid, reason, this.props.token)
         .then((json) => {
+          if (json.code !== 0) {
+            throw new Error(JSON.stringify(json));
+          }
           alert('举报成功');
         })
         .catch((e) => {
-          alert('举报失败');
-          console.error(e);
+          // alert('举报失败');
+          // console.error(e);
         });
     }
   }
-
   set_alias() {
     load_config();
     const alias = prompt(`给 #${this.state.info.pid} 添加别名：`);
@@ -600,15 +605,22 @@ class FlowSidebar extends PureComponent {
     return (
       <div className="flow-item-row sidebar-flow-item">
         <div className="box box-tip sidebar-toolbar">
-          {/* 取消举报功能 */}
-          {/* {!!this.props.token && (
+          {!!this.props.token && (
             <span className="sidebar-toolbar-item">
-              <a onClick={this.report.bind(this)}>
+              {/* <a onClick={this.report.bind(this)}>
                 <span className="icon icon-flag" />
                 <label>举报</label>
-              </a>
+              </a> */}
+              <Button
+                variant="contained"
+                onClick={this.report.bind(this)}
+                size="small"
+              >
+                <WarningIcon />
+                举报
+              </Button>
             </span>
-          )} */}
+          )}
           {/* <span className="sidebar-toolbar-item">
             <a onClick={this.load_replies.bind(this)}>
               <span className="icon icon-refresh" />
@@ -800,11 +812,12 @@ class FlowItemRow extends PureComponent {
       replies: [],
       reply_status: 'done',
       reply_error: null,
+      mode: props.mode,
       info: Object.assign({}, props.info, { variant: {} }),
       hidden: window.config.block_words.some((word) =>
         props.info.text.includes(word),
       ),
-      attention_override:
+      attention:
         props.attention_override === null ? false : props.attention_override,
       cached: true, // default no display anything
     };
@@ -842,6 +855,9 @@ class FlowItemRow extends PureComponent {
               replies: json.data,
               info: Object.assign({}, prev.info, {
                 reply: update_count ? '' + json.data.length : prev.info.reply,
+                temp_latest_reply: prev.info.variant.latest_reply
+                  ? prev.info.variant.latest_reply
+                  : '',
                 variant: json.data.length ? { latest_reply } : {}, // info._latest_reply in state is always null, Don't use it!
               }),
               attention: !!json.attention,
@@ -927,7 +943,7 @@ class FlowItemRow extends PureComponent {
         key={+new Date()}
         info={this.state.info}
         replies={this.state.replies}
-        attention={this.state.attention_override}
+        attention={this.state.attention}
         sync_state={this.setState.bind(this)}
         token={this.props.token}
         show_sidebar={this.props.show_sidebar}
@@ -973,7 +989,6 @@ class FlowItemRow extends PureComponent {
             quote_id = null;
             break;
           }
-
     const res = (
       <div
         className={
@@ -989,11 +1004,12 @@ class FlowItemRow extends PureComponent {
         <FlowItem
           parts={parts}
           info={this.state.info}
-          attention={this.state.attention_override}
+          attention={this.state.attention}
           img_clickable={false}
           is_quote={this.props.is_quote}
           color_picker={this.color_picker}
           show_pid={show_pid}
+          mode={this.state.mode}
           replies={this.state.replies}
           cached={this.state.cached}
           change_imgShow={this.props.change_imgShow}
@@ -1210,6 +1226,7 @@ function FlowChunk(props) {
                   info={info}
                   show_sidebar={props.show_sidebar}
                   token={token}
+                  mode={props.mode}
                   attention_override={
                     props.mode === 'attention_finished' ? true : null
                   }
@@ -1437,7 +1454,7 @@ export class Flow extends PureComponent {
                 ),
               ),
             },
-            mode: 'mine_finished',
+            mode: 'mine',
             loading_status: 'done',
           }));
         });

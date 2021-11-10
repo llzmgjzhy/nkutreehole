@@ -6,8 +6,11 @@ import './Common.css';
 
 export { format_time, Time, TitleLine };
 
-export const API_BASE = '//39.105.113.112/Tree_Hole_Login/';
-// export const API_BASE = '//10.130.217.79/';
+// export const socket = io('http://10.130.206.56:3120');
+export const socket = io('http://39.105.113.112:3120');
+// export const API_BASE = '//spring-autumn.net/Tree_Hole_Login/';
+export const API_BASE = '//spring-autumn.net/Tree_Hole/';
+// export const API_BASE = '//10.130.206.56/';
 
 // https://stackoverflow.com/questions/3446170/escape-string-for-use-in-javascript-regex
 function escape_regex(string) {
@@ -182,7 +185,6 @@ export class SafeTextarea extends Component {
         multiline
         minRows={1}
         style={{ width: 'calc(100vw)' }}
-        defaultValue="Default Value"
       />
     );
   }
@@ -268,7 +270,6 @@ export class SafeTextareaPost extends Component {
         multiline
         minRows={6}
         style={{ width: 'calc(100vw)' }}
-        defaultValue="Default Value"
       />
     );
   }

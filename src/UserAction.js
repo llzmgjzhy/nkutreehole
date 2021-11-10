@@ -24,7 +24,7 @@ import {
   get_json,
   token_param,
 } from './flows_api';
-
+import { socket } from './Common';
 import './UserAction.css';
 
 const BASE64_RATE = 4 / 3;
@@ -234,6 +234,12 @@ class LifeInfoBox extends Component {
 }
 
 export function InfoSidebar(props) {
+  const copy_qq = (qq) => {
+    if (copy(1176036298)) alert('复制成功！');
+  };
+  // function copy_qq(qq) {
+  //   if (copy(qq)) alert('复制成功！');
+  // }
   return (
     <div>
       {/* <PromotionBar /> */}
@@ -247,6 +253,7 @@ export function InfoSidebar(props) {
           <span className="icon icon-settings" />
           <label>树洞设置</label>
         </a>
+
         {/* &nbsp;&nbsp;
         <a
           href="http://pkuhelper.pku.edu.cn/treehole_rules.html"
@@ -263,6 +270,12 @@ export function InfoSidebar(props) {
           <span className="icon icon-github" />
           <label>意见反馈</label>
         </a> */}
+      </div>
+      <div className="box">
+        <p style={{ textAlign: 'center' }}>
+          新功能建议、问题反馈或想参与平台运营请联系qq：&nbsp;
+          <a onClick={copy_qq}>1176036298</a>
+        </p>
       </div>
       {/* <div className="box help-desc-box">
         <p>
@@ -544,7 +557,8 @@ export class ReplyForm extends Component {
     data.append('pid', this.props.pid);
     data.append('text', this.state.text);
     // data.append('user_token', this.props.token);
-    if (!!this.state.text) {
+    var temptext = this.state.text.replace(/^\s*|(\s*$)/g, '');
+    if (!!this.state.text && !!temptext) {
       fetch(
         API_BASE + '/api.php?action=do_comment' + token_param(this.props.token),
         {
@@ -561,13 +575,13 @@ export class ReplyForm extends Component {
             if (json.msg) alert(json.msg);
             throw new Error(JSON.stringify(json));
           }
-
           this.setState({
             loading_status: 'done',
             text: '',
           });
           this.area_ref.current.clear();
           this.props.on_complete();
+          socket.emit('comment', this.props.pid);
         })
         .catch((e) => {
           console.error(e);
@@ -663,6 +677,7 @@ export class PostForm extends Component {
     )
       .then(get_json)
       .then((json) => {
+        //0表示为正常发表，1表示该用户被禁言，2表示出现了其他错误
         if (json.code !== 0) {
           if (json.msg) alert(json.msg);
           throw new Error(JSON.stringify(json));
@@ -812,7 +827,8 @@ export class PostForm extends Component {
           this.setState({
             loading_status: 'loading',
           });
-          if (this.state.text || d.img) {
+          var temptext = this.state.text.replace(/^\s*|(\s*$)/g, '');
+          if (!!temptext || d.img) {
             this.do_post(
               this.state.text,
               d.img,
@@ -827,12 +843,14 @@ export class PostForm extends Component {
       this.setState({
         loading_status: 'loading',
       });
-      if (!!this.state.text) {
+      var temptext = this.state.text.replace(/^\s*|(\s*$)/g, '');
+      if (!!this.state.text && !!temptext) {
         this.do_post(this.state.text, null, null);
       } else {
         alert('请发表内容');
         this.setState({
           loading_status: 'done',
+          text: '',
         });
       }
     }

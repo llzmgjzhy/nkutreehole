@@ -23,7 +23,12 @@ import Backdrop from '@mui/material/Backdrop';
 import SpeedDial from '@mui/material/SpeedDial';
 import SpeedDialIcon from '@mui/material/SpeedDialIcon';
 import SpeedDialAction from '@mui/material/SpeedDialAction';
-import { Calculate } from '@mui/icons-material';
+import Badge from '@mui/material/Badge';
+import { socket } from './Common';
+import {
+  AirlineSeatReclineExtraOutlined,
+  Calculate,
+} from '@mui/icons-material';
 const flag_re = /^\/\/setflag ([a-zA-Z0-9_]+)=(.*)$/;
 
 const APP_SWITCHER_ROUTER = {
@@ -35,6 +40,11 @@ export default function MenuListComposition(props) {
   const [open, setOpen] = React.useState(false);
   const anchorRef = React.useRef(null);
 
+  //决定是否有提示点
+  const [invisible, setInvisible] = React.useState(true);
+  const handleBadgeVisibility = () => {
+    setInvisible(!invisible);
+  };
   const handleToggle = () => {
     setOpen((prevOpen) => !prevOpen);
   };
@@ -57,8 +67,11 @@ export default function MenuListComposition(props) {
     if (anchorRef.current && anchorRef.current.contains(event.target)) {
       return;
     }
-
     setOpen(false);
+    if (invisible == false) {
+      handleBadgeVisibility();
+      // localStorage['comment_Tips'] = '0';
+    }
     props.do_showmine();
   };
 
@@ -80,6 +93,16 @@ export default function MenuListComposition(props) {
 
     prevOpen.current = open;
   }, [open]);
+  // setInterval(() => {
+  //   if (localStorage['comment_Tips'] == '1') {
+  //     setInvisible(false);
+  //   }
+  // }, 1000);
+  socket.on('receive_comment', function (msg) {
+    if (msg == '1') {
+      setInvisible(false);
+    }
+  });
   return (
     <div>
       <Button
@@ -90,7 +113,17 @@ export default function MenuListComposition(props) {
         aria-haspopup="true"
         onClick={handleToggle}
       >
-        <StarsIcon />
+        <Badge
+          color="error"
+          variant="dot"
+          anchorOrigin={{
+            vertical: 'top',
+            horizontal: 'left',
+          }}
+          invisible={invisible}
+        >
+          <StarsIcon />
+        </Badge>
         <span className="control-btn-label">关注</span>{' '}
       </Button>
       <Popper
@@ -122,8 +155,18 @@ export default function MenuListComposition(props) {
                     关注
                   </MenuItem>
                   <MenuItem onClick={handleCloseMine}>
-                    <GpsNotFixedIcon />
-                    我的
+                    <Badge
+                      color="error"
+                      variant="dot"
+                      anchorOrigin={{
+                        vertical: 'top',
+                        horizontal: 'left',
+                      }}
+                      invisible={invisible}
+                    >
+                      <GpsNotFixedIcon />
+                      我的
+                    </Badge>
                   </MenuItem>
                 </MenuList>
               </ClickAwayListener>
@@ -158,7 +201,19 @@ function SpeedDialTooltipOpen(props) {
       },
     },
     {
-      icon: <GpsNotFixedIcon />,
+      icon: (
+        <Badge
+          color="error"
+          variant="dot"
+          anchorOrigin={{
+            vertical: 'top',
+            horizontal: 'left',
+          }}
+          invisible={invisible}
+        >
+          <GpsNotFixedIcon />
+        </Badge>
+      ),
       name: 'Mine',
       onClick: () => {
         props.do_showmine();
